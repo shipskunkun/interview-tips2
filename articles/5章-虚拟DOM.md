@@ -55,7 +55,7 @@ diff算法步骤
 	
 snabbdom 主要的两个函数：
 
-1. h(type, data, children)，返回 Virtual DOM 树。   
+1. h(type, data, children)，返回 vnode 节点，模拟的 dom 节点
 
 		h(‘<标签名>’, {…属性…}, […子元素…])
 		h(‘<标签名>’, {…属性…}, ‘….’)  
@@ -69,9 +69,102 @@ snabbdom 主要的两个函数：
 ![img](https://github.com/shipskunkun/interview-tips2/blob/master/images/5.png)
 
 
+## 5-8 snabbdom
+
+snabbdom 是如何实现， vnode 渲染的？
+初次渲染和  更新渲染 ？
+
+####自己的思路：
+	
+	1，使用插件的 h 函数和 patch 函数
+	2， 找到 插入node的节点，patch
+	3, 监听改变dom 动作，生成新的 vnode ， patch
+
+```
+ <script src="https://cdn.bootcss.com/snabbdom/0.7.0/h.js"></script>
+ <script type="text/javascript">
+ 
+        var snabbdom = window.snabbdom
+        
+        // 定义关键函数 patch
+        var patch = snabbdom.init([
+            snabbdom_class,
+            snabbdom_props,
+            snabbdom_style,
+            snabbdom_eventlisteners
+        ])
+
+        // 定义关键函数 h
+        var h = snabbdom.h
 
 
-## 5-15 ~ 5-21  diff算法
+        var container = document.getElementById('container')
+
+        // 渲染函数
+        var vnode
+        function render(data) {
+	        var newVnode = h(data);  //根据data 生成 vnode
+	       
+	        if (vnode) {  //如果有旧节点，更新
+	            // re-render
+	            patch(vnode, newVnode)
+	        } else {
+	            // 初次渲染
+	            patch(container, newVnode)
+	        }
+	
+	        // 存储当前的 vnode 结果
+	        vnode = newVnode
+	    }
+
+        // 初次渲染
+        render(data)
+
+
+        var btnChange = document.getElementById('btn-change')
+        btnChange.addEventListener('click', function () {
+            data[1].age = 30
+            data[2].address = '深圳'
+            // re-render
+            render(data)
+        })
+
+```
+
+## 5-12 ~ 5-14 废话，介绍diff 算法, 略
+
+<hr>
+
+## 自己的思路
+
+> 自己整理的思路？  
+
+	1. 核心就两个，根据js对象模拟的 vdom 生成 vnode  
+		如果节点是空，插入		
+		否则，更新之前的 vnode	
+	
+	2. 更新vnode, 如何以代价最小方式更新？如何判断	
+
+1. 首先，我们介绍	
+patch(container, vnode)		 
+如何把 json 描述的 虚拟对象，生成真实的  DOM 呢？
+	
+		通过createElement(vnode) 函数
+		根据tag 类型，创建节点，
+		遍历节点的属性 attrs ，给节点添加属性
+		遍历节点的孩子节点，通过appendChild, 递归调用createElement，生成dom， 添加到节点上
+
+
+2. 如何更新节点？
+	
+		遍历vnode 的孩子节点，遍历。  
+		如果  oldVnode 孩子i.tag = newNode 孩子i.tag, 递归比较更新  他们各自的孩子，下一层的事情
+		如果 不相等，直接 用新节点 newVode[i]，替换 oldVnode[i]
+
+
+<hr>
+
+## 5-15 ~ 5-21  diff算法 实现
 
 > 为何要使用diff算法？
 
@@ -176,6 +269,8 @@ function render(data) {
     vnode = newVnode
 }
 ```
+
+
 
 
 
