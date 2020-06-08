@@ -52,6 +52,9 @@ diff算法步骤
 	2. 当状态更新时,将新的js对象和旧的js对象进行比较，得到两个对象之间的差异
 	3. 将差异应用到真正的 dom 上
 
+重做demo
+	
+	1. 使用 data 生成 vnode	2.  第一次渲染，将 vnode 渲染到 #container 中	3.  并将 vnode 缓存下来	4.  修改 data 之后，用新 data 生成 newVnode	5.  将 vnode 和 newVnode 对比
 	
 snabbdom 主要的两个函数：
 
@@ -76,9 +79,9 @@ snabbdom 是如何实现， vnode 渲染的？
 
 ####自己的思路：
 	
-	1，使用插件的 h 函数和 patch 函数
-	2， 找到 插入node的节点，patch
-	3, 监听改变dom 动作，生成新的 vnode ， patch
+	1，h函数生成 vnode,  var newVnode = h(data);  
+	2，初次渲染，patch(container, newVnode)
+	3, 更新渲染，patch(vnode, newVnode)
 
 ```
  <script src="https://cdn.bootcss.com/snabbdom/0.7.0/h.js"></script>

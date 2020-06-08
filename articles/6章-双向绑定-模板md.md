@@ -19,9 +19,15 @@
 ViewModel 的理解，联系 View 和 Model  
 
 	Model - 模型、数据  
-	View - 视图、模板（视图和模型是分离的）	 	ViewModel - 连接 Model 和 View 	
-		view 可以通过事件绑定 DOM Listener ，影响到 model  
-		model 可以通过数据绑定 Data binding，影响到 view   
+	View - 视图、模板（视图和模型是分离的）	
+	
+三者之间的联系，以及如何对应到各段代码				
+ViewModel 的理解，联系 View 和 Model	 	ViewModel - 连接 Model 和 View 	
+		view 可以通过事件绑定 DOM Listener ，影响到 model
+		method中修改 data数据，即model，比如说， this.list = [] 
+		
+		model 可以通过数据绑定 Data binding，影响到 view
+		定义 data ,同步到视图中，比如 data 中list 多了一行，立马页面上 table 多了一行
 
 
 ## 6-9  vue 三要素
