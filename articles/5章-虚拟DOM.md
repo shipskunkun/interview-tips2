@@ -54,20 +54,31 @@ diff算法步骤
 
 重做demo
 	
-	1. 使用 data 生成 vnode	2.  第一次渲染，将 vnode 渲染到 #container 中	3.  并将 vnode 缓存下来	4.  修改 data 之后，用新 data 生成 newVnode	5.  将 vnode 和 newVnode 对比
+	1. 使用 data 生成 vnode
 	
+	2.  第一次渲染，将 vnode 渲染到 #container 中
+	
+	3.  并将 vnode 缓存下来
+	
+	4.  修改 data 之后，用新 data 生成 newVnode
+	
+	5.  将 vnode 和 newVnode 对比
+
 snabbdom 主要的两个函数：
 
 1. h(type, data, children)，返回 vnode 节点，模拟的 dom 节点
 
 		h(‘<标签名>’, {…属性…}, […子元素…])
-		h(‘<标签名>’, {…属性…}, ‘….’)  
+		h(‘<标签名>’, {…属性…}, ‘….’)
+
+
 2.  patch(oldVnode, newVnode)，比较新旧 Virtual DOM 树并更新。
 
 		patch(container, vnode) 
-		patch(vnode, newVnode) 
+		patch(vnode, newVnode) 
 
-   
+
+
 
 ![img](https://github.com/shipskunkun/interview-tips2/blob/master/images/5.png)
 
@@ -77,8 +88,8 @@ snabbdom 主要的两个函数：
 snabbdom 是如何实现， vnode 渲染的？
 初次渲染和  更新渲染 ？
 
-####自己的思路：
-	
+#### 自己的思路：	
+
 	1，h函数生成 vnode,  var newVnode = h(data);  
 	2，初次渲染，patch(container, newVnode)
 	3, 更新渲染，patch(vnode, newVnode)
@@ -142,11 +153,16 @@ snabbdom 是如何实现， vnode 渲染的？
 
 > 自己整理的思路？  
 
-	1. 核心就两个，根据js对象模拟的 vdom 生成 vnode  
-		如果节点是空，插入		
-		否则，更新之前的 vnode	
+	1. 当我们进行dom操作的时候触发 render(data) 方法
 	
-	2. 更新vnode, 如何以代价最小方式更新？如何判断	
+	render(data) 会根据虚拟dom生成 vnode
+	
+	判断 vnode 之前是否生成过，生成过，执行 patch(vnode, newVnode)，更新之前的 vnode	
+	否则，之前没有生成过vnode, 节点是空，插入patch(container, newVnode)
+	
+	2. vnode 和  newVode 如何对比？
+	如果当前节点相同，再递归对比子元素
+	不同，直接使用新节点代替当前节点
 
 1. 首先，我们介绍	
 patch(container, vnode)		 
@@ -171,14 +187,22 @@ patch(container, vnode)
 
 > 为何要使用diff算法？
 
-	1.  DOM 操作是“昂贵”的，因此尽量减少 DOM 操作	2.  找出本次 DOM 必须更新的节点来更新，其他的不更新	3.  这个“找出”的过程，就需要 diff 算法
+	1.  DOM 操作是“昂贵”的，因此尽量减少 DOM 操作
 	
+	2.  找出本次 DOM 必须更新的节点来更新，其他的不更新
+	
+	3.  这个“找出”的过程，就需要 diff 算法
 
 
-> diff 实现过程	1.  patch(container, vnode)
+
+> diff 实现过程
+
+
+	1.  patch(container, vnode)
 	2.  patch(vnode, newVnode)
 	3.  createElment
-	4.  updateChildren
+	4.  updateChildren
+
 > h 函数的具体实现
 
 ```
